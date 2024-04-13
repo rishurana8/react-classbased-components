@@ -3,7 +3,12 @@ import NewsItem from "./NewsItem";
 // import Spinner from "./Spinner";
 // import Spinner from "./Spinner";
 import PropTypes from 'prop-types'
-
+import {
+  BrowserRouter as Router,
+  Routes ,
+  Route,
+  Link
+} from "react-router-dom"
 
 export class News extends Component {
   static defaultProps = {
