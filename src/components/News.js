@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PropTypes from 'prop-types'
+import LoadingBar from 'react-top-loading-bar';
 import {
   BrowserRouter as Router,
   Routes ,
@@ -32,11 +33,15 @@ export class News extends Component {
         document.title = this.props.category;
   }
   async updateNews(){
+    this.props.setProgress(0);
     const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b74ac0d09949435cb22470e5f8274d8b&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
+    this.props.setProgress(30);
     let parsedData = await data.json();
+    this.props.setProgress(70);
     console.log(parsedData);
     this.setState({articles: parsedData.articles, totalResults: parsedData.totalResults,loading: false});
+    this.props.setProgress(100);
   }
   async componentDidMount(){ 
     this.updateNews();
@@ -67,7 +72,7 @@ export class News extends Component {
 
   render() {
     return (
-      <div className="container my-3">
+      <>
         <h1 className="text-center" style={{margin: '35px 0px'}}>NewsFeeder - Top headlines</h1>
         <InfiniteScroll
           dataLength={this.state.articles.length}
@@ -75,7 +80,8 @@ export class News extends Component {
           hasMore={this.state.articles.length !== this.state.totalResults}
           loader={<h4>Loading...</h4>}
         >
-          <div className="container">
+        
+        <div className="container">
         <div className="row">
         {this.state.articles.map((element)=>{
             return <div className="col-md-4" key={element.url}>
@@ -83,9 +89,9 @@ export class News extends Component {
             </div>
         })}
          </div>
-        </div>
+         </div>
         </InfiniteScroll>
-      </div>
+       </>
     );
   }
 }
